@@ -23,5 +23,6 @@ urlpatterns = [
     path('mapping/', include('mapping.urls')),
     path('admin/', admin.site.urls),
 	path('user/',include('user.urls')),
-    path('records/', include('records.urls'))
+    path('records/', include('records.urls')),
+    # path('system/', include('system.urls'))
 ]

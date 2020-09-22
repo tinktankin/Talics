@@ -34,6 +34,7 @@ INSTALLED_APPS = [
 	'mandates.apps.MandatesConfig',
 	'mapping.apps.MappingConfig',
 	'records.apps.RecordsConfig',
+	'system.apps.SystemConfig',
 	'user.apps.UserConfig',
 	'django.contrib.postgres',
 	'django.contrib.admin',

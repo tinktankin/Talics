@@ -11,6 +11,4 @@ urlpatterns = [
 	path('badrecords', views.badrecords,name='badrecords'),
 	path('manageteam', views.manageteam,name='manageteam'),
 	path('contacts', views.contacts,name='contacts'),
-
-
 ]
