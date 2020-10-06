@@ -25,3 +25,6 @@ class Mandates(models.Model):
     RecruiterAssignedTo = models.ForeignKey('user.User', on_delete = models.RESTRICT)
     AssignedDate = models.DateField(null = True)
     ClientID = models.ForeignKey('records.Client', on_delete = models.RESTRICT)
+
+    class Meta:
+        managed = True

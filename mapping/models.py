@@ -9,3 +9,6 @@ class Mapping(models.Model):
     MappingFor = models.TextField(null = True)
     CreatedOn = models.DateField(auto_now_add = True, null = True)
     Mappings = HStoreField(null = True)
+
+    class Meta:
+        managed = True

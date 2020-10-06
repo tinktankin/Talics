@@ -18,3 +18,6 @@ class User(models.Model):
     EmailID = models.EmailField(null = True)
     Department = models.TextField(blank = True)
     ValidTill = models.DateField(null = True)
+
+    class Meta:
+        managed = True

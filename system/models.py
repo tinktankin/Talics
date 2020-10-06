@@ -12,6 +12,9 @@ class CandidateStatus(models.Model):
     StageName = models.TextField(null = True)
     StageType = models.CharField(null = True, choices = TYPE, max_length = 6)
 
+    class Meta:
+        managed = True
+
 
 class Agency(models.Model):
     AgencyName = models.TextField(null = True)
@@ -22,3 +25,6 @@ class Agency(models.Model):
     KCName = models.TextField(null = True)
     KCEmail = models.EmailField(null = True)
     KCPhone = models.IntegerField(null = True)
+
+    class Meta:
+        managed = True

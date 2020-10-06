@@ -8,6 +8,7 @@ from user.models import User
 from mandates.models import Mandates
 from system.models import CandidateStatus
 from .models import Client
+import pandas as pd
 
 def index2(request):
 
@@ -16,8 +17,8 @@ def index2(request):
     # bad = read_frame(BadRecords.objects.all())
     df = df.astype(str)
     token = []
-
-
+    bad = pd.DataFrame()
+    good = pd.DataFrame()
     regex = '^[a-z0-9]+[\._]?[a-z0-9]+[@]\w+[.]\w{2,3}$'
 
     for index, row in df.iterrows():
@@ -40,9 +41,6 @@ def index2(request):
 
         if row['reqt_date'] not in Mandates.objects.values_list('AssignedDate', flat = True):
             dict['reqt_date'] = 'Not in the List'
-
-        if row['date_cv_submitted'] < row['reqt_date']:
-            dict['date_cv_submitted'] = 'Should be after reqt date'
 
 
         if 'client' not in dict.keys() or 'vacancy_code' not in dict.keys():
@@ -103,57 +101,157 @@ def index2(request):
         if not row['notice_period'].replace('.', '', 1).isdigit():
             dict['notice_period'] = 'Not Numeric'
 
+        # not updated
+        status = row['current_status']
+        if status != 0:
 
-        if row['current_status'] != 3:
+            # type select
+            if int(status) < 100:
 
-            if row['interview_date'] < row['date_cv_submitted']:
-                dict['interview_date'] = 'Should be after cv submitted'
-                row['reason'] = dict
+                if row['date_cv_submitted'] < row['reqt_date']:
+                    dict['date_cv_submitted'] = 'Should be after reqt date'
 
-            if row['Int_Tele_Date'] < row['interview_date']:
-                dict['Int_Tele_Date'] = 'Should be after interview date'
-                row['reason'] = dict
-
-            if row['Int_p1_Date'] < row['interview_date']:
-                dict['Int_p1_Date'] = 'Should be after interview date'
-                row['reason'] = dict
-
-            if row['Int_p2_Date'] < row['Int_p1_Date']:
-                dict['Int_p2_Date'] = 'Should be after p1'
-                row['reason'] = dict
-
-            if row['Int_p3_Date'] < row['Int_p2_Date']:
-                dict['Int_p3_Date'] = 'Should be after p2'
-                row['reason'] = dict
-
-            if row['Int_Final_Date'] < row['Int_p3_Date']:
-                dict['Int_Final_Date'] = 'Should be after p3'
-                row['reason'] = dict
-
-            if row['Int_Final_Date'] != None:
-                if row['Int_HR_Date'] < row['Int_Final_Date']:
-                    dict['Int_HR_Date'] = 'Should be after final date'
+                if row['interview_date'] < row['date_cv_submitted']:
+                    dict['interview_date'] = 'Should be after cv submitted'
                     row['reason'] = dict
+
+                if row['Int_Tele_Date'] < row['interview_date']:
+                    dict['Int_Tele_Date'] = 'Should be after interview date'
+                    row['reason'] = dict
+
+                if row['Int_p1_Date'] < row['interview_date']:
+                    dict['Int_p1_Date'] = 'Should be after interview date'
+                    row['reason'] = dict
+
+                if row['Int_p2_Date'] < row['Int_p1_Date']:
+                    dict['Int_p2_Date'] = 'Should be after p1'
+                    row['reason'] = dict
+
+                if row['Int_p3_Date'] < row['Int_p2_Date']:
+                    dict['Int_p3_Date'] = 'Should be after p2'
+                    row['reason'] = dict
+
+                if row['Int_Final_Date'] < row['Int_p3_Date']:
+                    dict['Int_Final_Date'] = 'Should be after p3'
+                    row['reason'] = dict
+
+                if row['Int_Final_Date'] != None:
+                    if row['Int_HR_Date'] < row['Int_Final_Date']:
+                        dict['Int_HR_Date'] = 'Should be after final date'
+                        row['reason'] = dict
+                else:
+                    if row['Int_HR_Date'] < row['interview_date']:
+                        dict['Int_HR_Date'] = 'Should be after interview date'
+                        row['reason'] = dict
+
+                if row['offer_date'] < row['Int_Final_Date'] or row['offer_date'] < row['interview_date'] :
+                    dict['offer_date'] = 'Should be after final/interview date'
+                    row['reason'] = dict
+
+                if row['joining_date'] < row['offer_date']:
+                    dict['joining_date'] = 'Should be after offer date'
+                    row['reason'] = dict
+
+                # if row['offer_amt'] != None:
+                if (not row['offer_amt'].replace('.', '', 1).isdigit()) and row['offer_amt'] < '9999':
+                    dict['offer_amt'] = 'Invalid Amount'
+
+            # type reject
             else:
-                if row['Int_HR_Date'] < row['interview_date']:
-                    dict['Int_HR_Date'] = 'Should be after interview date'
-                    row['reason'] = dict
 
-            if row['offer_date'] < row['Int_Final_Date'] or row['offer_date'] < row['interview_date'] :
-                dict['offer_date'] = 'Should be after final/interview date'
-                row['reason'] = dict
+                if status > 102:
 
-            if row['joining_date'] < row['offer_date']:
-                dict['joining_date'] = 'Should be after offer date'
-                row['reason'] = dict
+                    if status > 104:
 
-        # if row['offer_amt'] != None:
-        if (not row['offer_amt'].replace('.', '', 1).isdigit()) and row['offer_amt'] < '9999':
-            dict['offer_amt'] = 'Invalid Amount'
+                        if status > 105:
+
+                            if status > 106:
+
+                                if status > 107:
+
+                                    if status > 108:
+
+                                        if status > 110:
+
+                                            if status > 112:
+
+                                                # 115
+                                                if row['joining_date'] < row['offer_date']:
+                                                    dict['joining_date'] = 'Should be after offer date'
+                                                    row['reason'] = dict
+
+                                            # 112
+                                            if row['offer_date'] < row['Int_Final_Date'] or row['offer_date'] < row['interview_date'] :
+                                                dict['offer_date'] = 'Should be after final/interview date'
+                                                row['reason'] = dict
+
+                                        # 110/109
+                                        if row['Int_Final_Date'] != None:
+                                            if row['Int_HR_Date'] < row['Int_Final_Date']:
+                                                dict['Int_HR_Date'] = 'Should be after final date'
+                                                row['reason'] = dict
+                                        else:
+                                            if row['Int_HR_Date'] < row['interview_date']:
+                                                dict['Int_HR_Date'] = 'Should be after interview date'
+                                                row['reason'] = dict
+                                    # 108
+                                    if row['Int_Final_Date'] < row['Int_p3_Date']:
+                                        dict['Int_Final_Date'] = 'Should be after p3'
+                                        row['reason'] = dict
+
+                                # 107
+                                if row['Int_p2_Date'] < row['Int_p1_Date']:
+                                    dict['Int_p2_Date'] = 'Should be after p1'
+                                    row['reason'] = dict
+
+                                if row['Int_p3_Date'] < row['Int_p2_Date']:
+                                    dict['Int_p3_Date'] = 'Should be after p2'
+                                    row['reason'] = dict
+
+                            # 106
+                            if row['Int_p1_Date'] < row['interview_date']:
+                                dict['Int_p1_Date'] = 'Should be after interview date'
+                                row['reason'] = dict
+
+                        # 105
+                        if row['Int_Tele_Date'] < row['interview_date']:
+                            dict['Int_Tele_Date'] = 'Should be after interview date'
+                            row['reason'] = dict
+
+                    # 103/104
+                    if row['interview_date'] < row['date_cv_submitted']:
+                        dict['interview_date'] = 'Should be after cv submitted'
+                        row['reason'] = dict
+
+                # 101/102
+                if row['date_cv_submitted'] < row['reqt_date']:
+                    dict['date_cv_submitted'] = 'Should be after reqt date'
 
 
         row['reason'] = dict
 
-    bad = df.loc[df['reason'] != {}]
-    good = df.loc[df['reason'] == {}]
+
+        if row['reason'] != {}:
+
+            bad = df.loc[df['reason'] != {}]
+
+            # BadRecords.objects.bulk_create(
+            #     BadRecords(**recs) for recs in df.to_dict('row')
+            # )
+            print("BAD")
+
+        else:
+            good = df.loc[df['reason'] == {}]
+
+            # GoodRecords.objects.bulk_create(
+            #     GoodRecords(**recs) for recs in df.to_dict('row')
+            # )
+            print("GOOD")
+
+
+        # Staging.objects.get(id = row['id']).delete()
+        # df.drop(index)
+        print("DONE")
+
+
     return HttpResponse(bad.to_html())
